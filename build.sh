@@ -11,7 +11,7 @@ echo "Please enter your password."
 sudo mkdir -p /etc/pdn
 echo "src/main.rs -> /etc/pdn"
 sudo cp main/src/main.rs /etc/pdn
-echo "bin/pogdotnet -> /bin/pdn"
-sudo cp bin/pogdotnet /bin/pdn
-echo "bin/deployer -> /bin/pdnd"
-sudo cp bin/deployer /bin/pdnd
+echo "bin/pogdotnet -> /usr/bin/pdn"
+sudo cp bin/pogdotnet /usr/bin/pdn
+echo "bin/deployer -> /usr/bin/pdnd"
+sudo cp bin/deployer /usr/bin/pdnd
