@@ -6,7 +6,12 @@
  <img src="logo/vector/default-monochrome.svg" alt="drawing" width="200">
 </p>
 </b>
-Hello world:
+
+## Installation
+### Install Pog.NET by running the `build.sh` script and then run the executables in the bin folder.
+## Running programs
+### You can run a program using `bin/pogdotnet <program>` and you can turn it into an executable using `bin/deployer <program>`
+## Hello world:
 
 ```
 :println
