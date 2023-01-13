@@ -165,6 +165,17 @@ fn parse_args(args: Split<&str>, stack: &mut Vec<StackTypes>) -> Vec<Arg>{
                 types.push(Arg { selected: ArgTypes::String, register: None, int: None, label: None, string: Some(t.strtype.unwrap())})
             }
         }
+        else if i == "!!"{
+            let t = stack.pop().unwrap();
+            let f = stack.pop().unwrap();
+            if f.selected == Types::I64Type{
+                types.push(Arg { selected: ArgTypes::Int, register: None, int: Some(f.i64type.unwrap()), label: None, string: None})
+            }
+            else if f.selected == Types::StringType{
+                types.push(Arg { selected: ArgTypes::String, register: None, int: None, label: None, string: Some(f.strtype.unwrap())})
+            }
+            stack.push(t);
+        }
         else if i == "\""{
             strpush = true
         }
@@ -237,12 +248,34 @@ fn execute(mut stack: Vec<StackTypes>, mut registers: Registers, program: String
             let a: StackTypes = stack.pop().expect(format!("Stack underflow at line {}",line_num+1).as_str());
             let b: StackTypes = stack.pop().expect(format!("Stack underflow at line {}",line_num+1).as_str());
             if a.selected != Types::I64Type{
-                panic!("Invalid type for push: {:#?} at line {}", a.selected, line_num+1)
+                panic!("Invalid type for add: {:#?} at line {}", a.selected, line_num+1)
             }
             if b.selected != Types::I64Type{
-                panic!("Invalid type for push: {:#?} at line {}", a.selected, line_num+1)
+                panic!("Invalid type for add: {:#?} at line {}", a.selected, line_num+1)
             }
             stack.push(StackTypes::newi64(a.i64type.unwrap()+b.i64type.unwrap()));
+        }
+        else if op == "sub"{
+            let a: StackTypes = stack.pop().expect(format!("Stack underflow at line {}",line_num+1).as_str());
+            let b: StackTypes = stack.pop().expect(format!("Stack underflow at line {}",line_num+1).as_str());
+            if a.selected != Types::I64Type{
+                panic!("Invalid type for sub: {:#?} at line {}", a.selected, line_num+1)
+            }
+            if b.selected != Types::I64Type{
+                panic!("Invalid type for sub: {:#?} at line {}", a.selected, line_num+1)
+            }
+            stack.push(StackTypes::newi64(a.i64type.unwrap()-b.i64type.unwrap()));
+        }
+        else if op == "mul"{
+            let a: StackTypes = stack.pop().expect(format!("Stack underflow at line {}",line_num+1).as_str());
+            let b: StackTypes = stack.pop().expect(format!("Stack underflow at line {}",line_num+1).as_str());
+            if a.selected != Types::I64Type{
+                panic!("Invalid type for mul: {:#?} at line {}", a.selected, line_num+1)
+            }
+            if b.selected != Types::I64Type{
+                panic!("Invalid type for mul: {:#?} at line {}", a.selected, line_num+1)
+            }
+            stack.push(StackTypes::newi64(a.i64type.unwrap()*b.i64type.unwrap()));
         }
         else if op == "jump"{
             if arg_count != 1{

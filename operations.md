@@ -5,7 +5,8 @@
 * \$ = Register (exampe: `$r0`)
 * \: = Label (example: `:label`)
 * \" = String (example: `" Test "`)
-* \! = Top of stack (example: `push !`)
+* \! = Last item of stack (example: `push !`)
+* \! = Second to last item of stack (example: `push !!`)
 ## Registers:
 The avaliable registers are:
 * r0
@@ -48,6 +49,26 @@ Example:
     nout !
 ```
 Output: 70
+### Sub - Subtracts the top two stack values
+Example:
+```
+:main
+    push #30
+    push #40
+    sub
+    nout !
+```
+Output: 10
+### Mul - Multiplies the top two stack values
+Example:
+```
+:main
+    push #30
+    push #40
+    sub
+    nout !
+```
+Output: 10
 ### Nout - Prints a number
 Example:
 ```

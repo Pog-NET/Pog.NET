@@ -1,7 +1,17 @@
-:println
+:sprintln
     sout !
     cout #10
     ret
+:nprintln
+    nout !
+    cout #10
+    ret
+:swap
+    push !!
+    ret
 :main
-    push " Hello, world! "
-    jump :println
+    push #69
+    push #32
+    jump :swap
+    sub
+    jump :nprintln
