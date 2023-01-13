@@ -10,7 +10,7 @@
 ## Installation
 ### Install Pog.NET by running the `build.sh` script and then run the executables in the bin folder.
 ## Running programs
-### You can run a program using `bin/pogdotnet <program>` and you can turn it into an executable using `bin/deployer <program>`
+### You can run a program using `pdn <program>` and you can turn it into an executable using `pdnd <program> <output>`
 ## Hello world:
 
 ```
