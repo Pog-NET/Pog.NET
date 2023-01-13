@@ -8,7 +8,7 @@
 </b>
 
 ## Installation
-### Install Pog.NET by running the `build.sh` script and then run the executables in the bin folder.
+### Install Pog.NET by running the `build.sh` script and the executables will be added to your linux /bin/ folder
 ## Running programs
 ### You can run a program using `pdn <program>` and you can turn it into an executable using `pdnd <program> <output>`
 ## Hello world:
