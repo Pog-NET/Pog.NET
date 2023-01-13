@@ -18,7 +18,7 @@ impl StackTypes {
         return StackTypes::new(Types::StringType, None,Some(value))
     }
 }
-use std::{env::{args}, str::Split, collections::{HashMap}, vec};
+use std::{env::{args}, str::Split, collections::{HashMap}, vec, process::exit};
 #[derive(Debug,Clone)]
 struct Registers{
     r0: Option<StackTypes>,
@@ -389,10 +389,17 @@ fn execute(mut stack: Vec<StackTypes>, mut registers: Registers, program: String
         }
     }
 }
+fn _usage() -> String{
+    println!("Pog.NET\nUsage: pdn <file>");
+    exit(1);
+}
 fn main() {
     let stack: Vec<StackTypes> = vec![];
     let registers =  Registers { r0: None, r1: None, r2: None, r3: None, r4: None, r5: None, r6: None, r7: None, r8: None, r9: None };
-    let file: String = args().nth(1).expect("No arguments passed.");
+    let file: String = match args().nth(1){
+        None => _usage(),
+        Some(i) => i
+    };
     let program : String = std::fs::read_to_string(file).expect("File error.");
     execute(stack, registers, program)
 }
