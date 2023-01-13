@@ -63,12 +63,12 @@ Output: 10
 Example:
 ```
 :main
-    push #30
-    push #40
-    sub
+    push #10
+    push #10
+    mul
     nout !
 ```
-Output: 10
+Output: 100
 ### Nout - Prints a number
 Example:
 ```
