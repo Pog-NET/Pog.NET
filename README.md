@@ -24,3 +24,4 @@ Hello world:
 * main
     * Pushes the string "Hello, world!" to the top of the stack
     * Jumps to the println function
+### For more information check out [operations.md](./operations.md)
