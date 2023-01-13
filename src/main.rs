@@ -130,7 +130,7 @@ struct Arg{
     string: Option<String>,
     int: Option<i64>
 }
-fn parse_args(args: Split<&str>) -> Vec<Arg>{
+fn parse_args(args: Split<&str>, stack: &mut Vec<StackTypes>) -> Vec<Arg>{
     let mut types: Vec<Arg> = vec![];
     let mut t : bool = false;
     let mut strpush: bool = false;
@@ -155,6 +155,15 @@ fn parse_args(args: Split<&str>) -> Vec<Arg>{
         }
         else if i.starts_with(":"){
             types.push(Arg { selected: ArgTypes::Label, register: None, int: None, label: Some(i.to_string()), string: None})
+        }
+        else if i == "!"{
+            let t = stack.pop().unwrap();
+            if t.selected == Types::I64Type{
+                types.push(Arg { selected: ArgTypes::Int, register: None, int: Some(t.i64type.unwrap()), label: None, string: None})
+            }
+            else if t.selected == Types::StringType{
+                types.push(Arg { selected: ArgTypes::String, register: None, int: None, label: None, string: Some(t.strtype.unwrap())})
+            }
         }
         else if i == "\""{
             strpush = true
@@ -203,7 +212,7 @@ fn execute(mut stack: Vec<StackTypes>, mut registers: Registers){
         line_num += 1;
         let line: String = prog_split.clone().nth(line_num as usize).unwrap().replace("\t","").replace("    ", "");
         let mut line_split: Split<&str> = line.split(" ");
-        let args = parse_args(line_split.clone());
+        let args = parse_args(line_split.clone(),&mut stack);
         let op: &str = line_split.nth(0).unwrap();
         let arg_count: i32 = count_args(line_split.clone());
         if labels.contains_key(op){
