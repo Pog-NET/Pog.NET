@@ -1,6 +1,6 @@
 <h1 align=center> Pog.NET
 </h1>
-<h3 align=center><b> A stack-based and register-based no dependency compiler toolchain written in rust!
+<h3 align=center><b> A stack-based and register-based compiler toolchain written in rust!
 </h3>
 <br><br><p align="center">
  <img src="logo/vector/default-monochrome.svg" alt="drawing" width="200">
