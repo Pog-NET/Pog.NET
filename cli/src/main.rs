@@ -8,11 +8,11 @@ fn err(msg: &str) {
     println!("\x1b[31m\x1b[1mFatal Error.\nError message: \x1b[0m{}", msg);
     exit(1);
 }
-fn ok(msg: &str){
+fn ok(msg: &str) {
     println!("\x1b[32m\x1b[1mOK: \x1b[0m{}", msg);
 }
-fn info(msg: &str){
-    if VERBOSE{
+fn info(msg: &str) {
+    if VERBOSE {
         println!("\x1b[33m\x1b[1mINFO: \x1b[0m{}", msg);
     }
 }
@@ -30,9 +30,21 @@ fn preprocess(file: &str, out: &str) {
                 )
                 .as_str());
             } else if !std::path::Path::new(p.clone().nth(1).unwrap()).exists() {
-                err(format!("File {} does not exist on line {} in file {}.", p.clone().nth(1).unwrap(), line, file).as_str());
+                err(format!(
+                    "File {} does not exist on line {} in file {}.",
+                    p.clone().nth(1).unwrap(),
+                    line,
+                    file
+                )
+                .as_str());
             } else if std::path::Path::new(p.clone().nth(1).unwrap()).is_dir() {
-                err(format!("{} is a directory on line {} in file {}.", p.clone().nth(1).unwrap(), line, file).as_str())
+                err(format!(
+                    "{} is a directory on line {} in file {}.",
+                    p.clone().nth(1).unwrap(),
+                    line,
+                    file
+                )
+                .as_str())
             }
             preprocess(p.clone().nth(1).unwrap(), p.clone().nth(1).unwrap());
             info(format!("Preprocessed: {}", p.clone().nth(1).unwrap()).as_str());
@@ -46,12 +58,14 @@ fn preprocess(file: &str, out: &str) {
         preprocessed,
     )
     .unwrap();
-    if out == "main"{
+    if out == "main" {
         let mut last_step: String = "".to_string();
         let paths = std::fs::read_dir("./build_artifacts").unwrap();
-        for path in paths{
-            if path.as_ref().unwrap().path().display().to_string() != "./build_artifacts/main.pnet"{
-                last_step += &(read_to_string(path.unwrap().path().display().to_string()).unwrap() + "\n")
+        for path in paths {
+            if path.as_ref().unwrap().path().display().to_string() != "./build_artifacts/main.pnet"
+            {
+                last_step +=
+                    &(read_to_string(path.unwrap().path().display().to_string()).unwrap() + "\n")
             }
         }
         last_step += &(read_to_string("build_artifacts/main.pnet").unwrap());
@@ -82,14 +96,29 @@ fn main() {
         info("Preprocessing.");
         preprocess(args().nth(2).unwrap().as_str(), "main");
         info("Running");
-        Command::new("pdn_exec").args(["build_artifacts/final"]).spawn().unwrap().wait().unwrap();
-    }
-    else if args().nth(1).unwrap() == "deploy" {
+        Command::new("pdn_exec")
+            .args(["build_artifacts/final"])
+            .spawn()
+            .unwrap()
+            .wait()
+            .unwrap();
+    } else if args().nth(1).unwrap() == "deploy" {
         info("Preprocessing.");
         preprocess(args().nth(2).unwrap().as_str(), "main");
         ok("Preprocessed");
         info("Deploying");
-        Command::new("pdn_deploy").args(["build_artifacts/final",args().nth(2).unwrap().as_str().replace(".pnet",".out").as_str()]).output().unwrap();
+        Command::new("pdn_deploy")
+            .args([
+                "build_artifacts/final",
+                args()
+                    .nth(2)
+                    .unwrap()
+                    .as_str()
+                    .replace(".pnet", ".out")
+                    .as_str(),
+            ])
+            .output()
+            .unwrap();
         ok("Deployed");
     }
     match Command::new("rm")
