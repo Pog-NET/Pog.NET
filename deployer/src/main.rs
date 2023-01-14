@@ -9,7 +9,7 @@ fn main() {
     println!("Initializing file.");
     let _main = std::fs::read_to_string("/etc/pdn/main.rs").unwrap();
     let _main = _main.replace("fn main()", "fn _main()");
-    let _main = _main.replace("fn _deployment(){", "fn main(){");
+    let _main = _main.replace("fn _deployment() {", "fn main() {");
     let _main = _main.replace("\"_deployer_replace_me\"", format!("{:#?}", code).as_str());
     std::fs::write("./main.rs", _main).unwrap();
     println!("Building.");
