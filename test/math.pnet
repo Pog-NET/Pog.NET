@@ -1,0 +1,19 @@
+:main
+    sout " 1 + 1 =  "
+    push #1
+    push #1
+    add
+    nout !
+    cout #10
+    sout " 5 * 5 =  "
+    push #5
+    push #5
+    mul
+    nout !
+    cout #10
+    sout " 5 - 10 =  "
+    push #10
+    push #5
+    sub
+    nout !
+    cout #10

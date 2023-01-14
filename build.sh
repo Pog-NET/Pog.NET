@@ -1,3 +1,5 @@
+mkdir -p bin
+echo "Building."
 cd deployer
 cargo build --release
 cp target/release/deployer ../bin
@@ -15,3 +17,4 @@ echo "bin/pogdotnet -> /usr/bin/pdn"
 sudo cp bin/pogdotnet /usr/bin/pdn
 echo "bin/deployer -> /usr/bin/pdnd"
 sudo cp bin/deployer /usr/bin/pdnd
+rm -rf bin
