@@ -4,6 +4,7 @@ use std::{
     fs::{create_dir, read_to_string, write},
     process::{exit, Command},
 };
+use rand::random;
 fn err(msg: &str) {
     println!("\x1b[31m\x1b[1mFatal Error.\nError message: \x1b[0m{}", msg);
     exit(1);
@@ -53,12 +54,19 @@ fn preprocess(file: &str, out: &str) {
         }
         line += 1;
     }
-    write(
-        ("build_artifacts/".to_string() + out).to_string() + ".pnet",
-        preprocessed,
-    )
-    .unwrap();
+    if out != "main"{
+        write(
+            ("build_artifacts/".to_string() + &random::<u16>().to_string()) + ".pnet",
+            preprocessed.clone(),
+        )
+        .unwrap();
+    }
     if out == "main" {
+        write(
+            "build_artifacts/main.pnet",
+            preprocessed,
+        )
+        .unwrap();
         let mut last_step: String = "".to_string();
         let paths = std::fs::read_dir("./build_artifacts").unwrap();
         for path in paths {
@@ -120,14 +128,5 @@ fn main() {
             .output()
             .unwrap();
         ok("Deployed");
-    }
-    match Command::new("rm")
-        .args(["-rf", "build_artifacts"])
-        .spawn()
-        .unwrap()
-        .wait()
-    {
-        Err(_) => err("rm command failed"),
-        Ok(_) => (),
     }
 }
