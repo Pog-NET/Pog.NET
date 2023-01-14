@@ -1,10 +1,10 @@
 const VERBOSE: bool = false;
+use rand::random;
 use std::{
     env::args,
     fs::{create_dir, read_to_string, write},
     process::{exit, Command},
 };
-use rand::random;
 fn err(msg: &str) {
     println!("\x1b[31m\x1b[1mFatal Error.\nError message: \x1b[0m{}", msg);
     exit(1);
@@ -54,7 +54,7 @@ fn preprocess(file: &str, out: &str) {
         }
         line += 1;
     }
-    if out != "main"{
+    if out != "main" {
         write(
             ("build_artifacts/".to_string() + &random::<u16>().to_string()) + ".pnet",
             preprocessed.clone(),
@@ -62,11 +62,7 @@ fn preprocess(file: &str, out: &str) {
         .unwrap();
     }
     if out == "main" {
-        write(
-            "build_artifacts/main.pnet",
-            preprocessed,
-        )
-        .unwrap();
+        write("build_artifacts/main.pnet", preprocessed).unwrap();
         let mut last_step: String = "".to_string();
         let paths = std::fs::read_dir("./build_artifacts").unwrap();
         for path in paths {
