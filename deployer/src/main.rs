@@ -16,5 +16,5 @@ fn main() {
     std::process::Command::new("rustc").arg("./main.rs").arg("-o").arg(args().nth(2).unwrap()).spawn().unwrap().wait().unwrap();
     println!("Cleaning up.");
     std::process::Command::new("rm").arg("./main.rs").spawn().unwrap().wait().unwrap();
-    println!("Outputted ./out")
+    println!("Outputted {}",args().nth(2).unwrap())
 }
