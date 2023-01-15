@@ -243,7 +243,7 @@ fn execute(mut stack: Vec<StackTypes>, mut registers: Registers, program: String
     }
     let mut line_num: i32 = *labels.get(":main").unwrap() as i32;
     let mut return_stack: Vec<i32> = vec![];
-    let mut variables: HashMap<String,StackTypes> = HashMap::new();
+    let mut variables: HashMap<String, StackTypes> = HashMap::new();
     while line_num < prog_len - 1 {
         line_num += 1;
         let line: String = prog_split
@@ -563,18 +563,34 @@ fn execute(mut stack: Vec<StackTypes>, mut registers: Registers, program: String
             if arg_count != 1 {
                 panic!("Not enough args at line {}", line_num + 1)
             }
-            if args.clone().get(0).unwrap().selected != ArgTypes:: String{
-                panic!("Invalid type {:#?} for set at line {}", args.clone().get(0).unwrap().selected,line_num+1);
+            if args.clone().get(0).unwrap().selected != ArgTypes::String {
+                panic!(
+                    "Invalid type {:#?} for set at line {}",
+                    args.clone().get(0).unwrap().selected,
+                    line_num + 1
+                );
             }
-            variables.insert(args.clone().get(0).unwrap().clone().string.unwrap(), stack.pop().unwrap());
+            variables.insert(
+                args.clone().get(0).unwrap().clone().string.unwrap(),
+                stack.pop().unwrap(),
+            );
         } else if op == "get" {
             if arg_count != 1 {
                 panic!("Not enough args at line {}", line_num + 1)
             }
-            if args.clone().get(0).unwrap().selected != ArgTypes:: String{
-                panic!("Invalid type {:#?} for get at line {}", args.clone().get(0).unwrap().selected,line_num+1);
+            if args.clone().get(0).unwrap().selected != ArgTypes::String {
+                panic!(
+                    "Invalid type {:#?} for get at line {}",
+                    args.clone().get(0).unwrap().selected,
+                    line_num + 1
+                );
             }
-            stack.push(variables.get(&args.clone().get(0).unwrap().clone().string.unwrap()).unwrap().to_owned());
+            stack.push(
+                variables
+                    .get(&args.clone().get(0).unwrap().clone().string.unwrap())
+                    .unwrap()
+                    .to_owned(),
+            );
         }
     }
 }
