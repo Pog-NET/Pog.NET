@@ -97,7 +97,7 @@ Example:
     sout " Hello from the test label! "
     ret
 :main
-    jump test
+    jump :test
 ```
 Output: Hello from the test label!
 ### Je - Jumpts to a label if the top two stack values are equal
@@ -109,7 +109,7 @@ Example:
 :main
     push #30
     push #30
-    je test
+    je :test
 ```
 Output: Hello from the test label!
 <br><br>Example:
@@ -120,7 +120,7 @@ Output: Hello from the test label!
 :main
     push #30
     push #20
-    je test
+    je :test
 ```
 Output: (None)
 
@@ -133,7 +133,7 @@ Example:
 :main
     push #30
     push #30
-    jne test
+    jne :test
 ```
 Output: (None)
 <br><br>Example:
@@ -144,7 +144,7 @@ Output: (None)
 :main
     push #30
     push #20
-    jne test
+    jne :test
 ```
 Output: Hello from the test label!
 
@@ -156,6 +156,18 @@ Example:
     ret
     sout " Hello! "
 :main
-    jump test
+    jump :test
 ```
 Output: Hello!
+### Set / Get - Sets / Gets a variable
+Example:
+```
+:main
+    jump :test
+    push #10
+    set " test "
+    push #20
+    get " test "
+    nout !
+```
+Output: 10
