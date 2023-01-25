@@ -1,3 +1,0 @@
-:main
-    sout " Hello, world! "
-    cout #10
