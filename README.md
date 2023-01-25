@@ -8,7 +8,8 @@
 </b>
 
 ## Installation
-### Install Pog.NET by running the `build.sh` script and the executables will be added to your linux /usr/bin/ folder
+### Install Pog.NET on Linux by running the `build.sh` script and the executables will be added to your linux /usr/bin/ folder
+### Install Pog.NET on Windows by running the `build.bat` script then add "\Program Files\pdn" to your PATH.
 ## Running programs
 ### You can run a program using `pognet run <program>` and you can turn it into an executable using `pognet deploy <program>`
 ## Hello world:

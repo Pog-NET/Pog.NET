@@ -1,4 +1,6 @@
 const VERBOSE: bool = false;
+use enable_ansi_support::enable_ansi_support;
+use std::fs;
 use rand::random;
 use std::{
     env::args,
@@ -76,16 +78,8 @@ fn preprocess(file: &str, out: &str) {
         write("build_artifacts/final", last_step).unwrap();
     }
 }
-fn main() {
-    if args().len() != 3 {
-        err(format!("Usage: {} <run/deploy> <file>", args().nth(0).unwrap()).as_str())
-    } else if args().nth(1).unwrap() != "run" && args().nth(1).unwrap() != "deploy" {
-        err(format!("Usage: {} <run/deploy> <file>", args().nth(0).unwrap()).as_str())
-    } else if !std::path::Path::new(&args().nth(2).unwrap()).exists() {
-        err(format!("File {} does not exist.", args().nth(2).unwrap()).as_str())
-    } else if std::path::Path::new(&args().nth(2).unwrap()).is_dir() {
-        err(format!("{} is a directory.", args().nth(2).unwrap()).as_str())
-    }
+#[cfg(not(windows))]
+fn build(){
     match Command::new("rm")
         .args(["-rf", "build_artifacts"])
         .spawn()
@@ -125,4 +119,52 @@ fn main() {
             .unwrap();
         ok("Deployed");
     }
+}
+#[cfg(windows)]
+fn build(){
+    if let Ok(_) = fs::remove_dir_all("build_artifacts") {
+    } else {};
+    create_dir("build_artifacts").unwrap();
+    if args().nth(1).unwrap() == "run" {
+        info("Preprocessing.");
+        preprocess(args().nth(2).unwrap().as_str(), "main");
+        info("Running");
+        Command::new("pdn_exec")
+            .args(["build_artifacts/final"])
+            .spawn()
+            .unwrap()
+            .wait()
+            .unwrap();
+    } else if args().nth(1).unwrap() == "deploy" {
+        info("Preprocessing.");
+        preprocess(args().nth(2).unwrap().as_str(), "main");
+        ok("Preprocessed");
+        info("Deploying");
+        Command::new("pdn_deploy")
+            .args([
+                "build_artifacts/final",
+                args()
+                    .nth(2)
+                    .unwrap()
+                    .as_str()
+                    .replace(".pnet", ".out")
+                    .as_str(),
+            ])
+            .output()
+            .unwrap();
+        ok("Deployed");
+    }
+}
+fn main() {
+    enable_ansi_support().unwrap();
+    if args().len() != 3 {
+        err(format!("Usage: {} <run/deploy> <file>", args().nth(0).unwrap()).as_str())
+    } else if args().nth(1).unwrap() != "run" && args().nth(1).unwrap() != "deploy" {
+        err(format!("Usage: {} <run/deploy> <file>", args().nth(0).unwrap()).as_str())
+    } else if !std::path::Path::new(&args().nth(2).unwrap()).exists() {
+        err(format!("File {} does not exist.", args().nth(2).unwrap()).as_str())
+    } else if std::path::Path::new(&args().nth(2).unwrap()).is_dir() {
+        err(format!("{} is a directory.", args().nth(2).unwrap()).as_str())
+    }
+    build();
 }

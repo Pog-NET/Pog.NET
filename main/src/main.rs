@@ -231,7 +231,8 @@ fn count_args(args: Split<&str>) -> i32 {
     }
     count
 }
-fn execute(mut stack: Vec<StackTypes>, mut registers: Registers, program: String) {
+fn execute(mut stack: Vec<StackTypes>, mut registers: Registers,mut program: String) {
+    program = program.replace("\r","");
     let prog_split: Split<&str> = program.split("\n");
     let labels: HashMap<String, i16> = get_labels(prog_split.clone());
     if !labels.contains_key(":main") {
