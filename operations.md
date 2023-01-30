@@ -171,3 +171,10 @@ Example:
     nout !
 ```
 Output: 10
+
+<br><br>
+docs todo:
+
+- [ ] sret
+- [ ] retpop
+- [ ] exit

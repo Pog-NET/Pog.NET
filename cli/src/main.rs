@@ -74,7 +74,6 @@ fn preprocess(file: &str, out: &str) {
                     &(read_to_string(path.unwrap().path().display().to_string()).unwrap() + "\n")
             }
         }
-        last_step += &(read_to_string("build_artifacts/main.pnet").unwrap());
         write("build_artifacts/final", last_step).unwrap();
     }
 }

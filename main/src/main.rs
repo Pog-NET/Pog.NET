@@ -1,3 +1,4 @@
+const EXTREME_DEBUG: bool = false;
 #[derive(Debug, Clone, PartialEq)]
 pub enum Types {
     I64Type = 0,
@@ -231,8 +232,8 @@ fn count_args(args: Split<&str>) -> i32 {
     }
     count
 }
-fn execute(mut stack: Vec<StackTypes>, mut registers: Registers,mut program: String) {
-    program = program.replace("\r","");
+fn execute(mut stack: Vec<StackTypes>, mut registers: Registers, mut program: String) {
+    program = program.replace("\r", "");
     let prog_split: Split<&str> = program.split("\n");
     let labels: HashMap<String, i16> = get_labels(prog_split.clone());
     if !labels.contains_key(":main") {
@@ -245,7 +246,11 @@ fn execute(mut stack: Vec<StackTypes>, mut registers: Registers,mut program: Str
     let mut line_num: i32 = *labels.get(":main").unwrap() as i32;
     let mut return_stack: Vec<i32> = vec![];
     let mut variables: HashMap<String, StackTypes> = HashMap::new();
+    let mut pushret: bool = true;
     while line_num < prog_len - 1 {
+        if EXTREME_DEBUG{
+            println!("{}",return_stack.len());
+        }
         line_num += 1;
         let line: String = prog_split
             .clone()
@@ -363,7 +368,9 @@ fn execute(mut stack: Vec<StackTypes>, mut registers: Registers,mut program: Str
                 )
             }
             if labels.contains_key(&args.get(0).unwrap().clone().label.unwrap()) {
-                return_stack.push(line_num);
+                if pushret {
+                    return_stack.push(line_num);
+                }
                 line_num = *labels
                     .get(&args.get(0).unwrap().clone().label.unwrap())
                     .unwrap() as i32;
@@ -393,7 +400,9 @@ fn execute(mut stack: Vec<StackTypes>, mut registers: Registers,mut program: Str
                 .expect(format!("Stack underflow at line {}", line_num + 1).as_str());
             if a == b {
                 if labels.contains_key(&args.get(0).unwrap().clone().label.unwrap()) {
-                    return_stack.push(line_num);
+                    if pushret {
+                        return_stack.push(line_num);
+                    }
                     line_num = *labels
                         .get(&args.get(0).unwrap().clone().label.unwrap())
                         .unwrap() as i32;
@@ -424,7 +433,9 @@ fn execute(mut stack: Vec<StackTypes>, mut registers: Registers,mut program: Str
                 .expect(format!("Stack underflow at line {}", line_num + 1).as_str());
             if a != b {
                 if labels.contains_key(&args.get(0).unwrap().clone().label.unwrap()) {
-                    return_stack.push(line_num);
+                    if pushret {
+                        return_stack.push(line_num);
+                    }
                     line_num = *labels
                         .get(&args.get(0).unwrap().clone().label.unwrap())
                         .unwrap() as i32;
@@ -592,6 +603,20 @@ fn execute(mut stack: Vec<StackTypes>, mut registers: Registers,mut program: Str
                     .unwrap()
                     .to_owned(),
             );
+        } else if op == "popret" {
+            if arg_count != 0 {
+                panic!("Not enough args at line {}", line_num + 1)
+            }
+            return_stack.pop();
+        } 
+        else if op == "sret"{
+            pushret = !pushret;
+        }
+        else if op == "exit" {
+            if arg_count != 0 {
+                panic!("Not enough args at line {}", line_num + 1)
+            }
+            std::process::exit(0)
         }
     }
 }

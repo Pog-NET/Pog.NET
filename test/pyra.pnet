@@ -1,0 +1,36 @@
+-- implements safe while loop --
+
+:while_2
+    sout " * "
+    push $r2
+    push #1
+    add
+    pop $r2
+    push $r1
+    push $r2
+    jne :while_2
+    sret
+:while
+    push #0
+    pop $r2
+    push $r1
+    push #1
+    add
+    pop $r1
+    push $r1
+    push $r0
+    cout #10
+    sret
+    jne :while_2
+    sret
+    push $r1
+    push $r0
+    je :exit
+:main
+    push #10
+    pop $r0
+    push #0
+    pop $r1
+    jump :while
+:exit
+    exit
