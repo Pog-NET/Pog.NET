@@ -173,4 +173,4 @@ Example:
 Output: 10
 ### sret. Disables call stack. (Optimization purposes)
 ### retpop. Pops from the top of the call stack. (Optimization purposes)
-### exit. Exits the program
+### exit <exitcode>. Exits the program
