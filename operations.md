@@ -171,10 +171,6 @@ Example:
     nout !
 ```
 Output: 10
-
-<br><br>
-docs todo:
-
-- [ ] sret
-- [ ] retpop
-- [ ] exit
+### sret. Disables call stack. (Optimization purposes)
+### retpop. Pops from the top of the call stack. (Optimization purposes)
+### exit. Exits the program
