@@ -1,6 +1,5 @@
 const VERBOSE: bool = false;
 use enable_ansi_support::enable_ansi_support;
-use std::fs;
 use rand::random;
 use std::{
     env::args,
@@ -19,6 +18,7 @@ fn info(msg: &str) {
         println!("\x1b[33m\x1b[1mINFO: \x1b[0m{}", msg);
     }
 }
+#[cfg(windows)]
 fn preprocess(file: &str, out: &str) {
     let mut preprocessed: String = "".to_string();
     let contents = read_to_string(file).unwrap();
@@ -74,6 +74,67 @@ fn preprocess(file: &str, out: &str) {
                     &(read_to_string(path.unwrap().path().display().to_string()).unwrap() + "\n")
             }
         }
+        write("build_artifacts/final", last_step).unwrap();
+    }
+}
+#[cfg(not(windows))]
+fn preprocess(file: &str, out: &str) {
+    let mut preprocessed: String = "".to_string();
+    let contents = read_to_string(file).unwrap();
+    let mut line = 1;
+    for i in contents.split("\n") {
+        let p = i.split(" ");
+        if p.clone().nth(0).unwrap().starts_with("%import") {
+            if p.clone().collect::<Vec<_>>().len() != 2 {
+                err(format!(
+                    "Expected second argument to %import on line {} in file {}",
+                    line, file
+                )
+                .as_str());
+            } else if !std::path::Path::new(p.clone().nth(1).unwrap()).exists() {
+                err(format!(
+                    "File {} does not exist on line {} in file {}.",
+                    p.clone().nth(1).unwrap(),
+                    line,
+                    file
+                )
+                .as_str());
+            } else if std::path::Path::new(p.clone().nth(1).unwrap()).is_dir() {
+                err(format!(
+                    "{} is a directory on line {} in file {}.",
+                    p.clone().nth(1).unwrap(),
+                    line,
+                    file
+                )
+                .as_str())
+            }
+            preprocess(p.clone().nth(1).unwrap(), p.clone().nth(1).unwrap());
+            info(format!("Preprocessed: {}", p.clone().nth(1).unwrap()).as_str());
+        } else {
+            preprocessed += &(i.to_string() + "\n");
+        }
+        line += 1;
+    }
+    if out != "main" {
+        write(
+            ("build_artifacts/".to_string() + &random::<u16>().to_string()) + ".pnet",
+            preprocessed.clone(),
+        )
+        .unwrap();
+    }
+    if out == "main" {
+        write("build_artifacts/main.pnet", preprocessed).unwrap();
+        let mut last_step: String = "".to_string();
+        let paths = std::fs::read_dir("./build_artifacts").unwrap();
+        for path in paths {
+            if path.as_ref().unwrap().path().display().to_string() != "./build_artifacts/main.pnet"
+            {
+                last_step +=
+                    &(read_to_string(path.unwrap().path().display().to_string()).unwrap() + "\n")
+            }
+        }
+        last_step +=
+            &(read_to_string("./build_artifacts/main.pnet").unwrap() + "\n");
         write("build_artifacts/final", last_step).unwrap();
     }
 }
